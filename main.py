@@ -8,11 +8,13 @@ root.geometry("550x410")
 
 #List of words in japanese add more to list
 words = [ 
+         
          (("あ") , ("A")),
          (("い") , ("I")),
          (("う") , ("U")),
          (("え") , ("E")),
-         (("お") , ("O"))   
+         (("お") , ("O")),
+      
 
 ]
 
@@ -21,6 +23,15 @@ words = [
 count = len(words)
 
 def next():
+    global hinter, hint_count
+    #Clear Screen
+    answer_label.config(text="")
+    my_entry.delete(0, END)
+    hint_label.config(text="")
+    #Clear Hints
+    hinter = ""
+    hint_count = 0
+
     global random_word
     #Create random word selection
     random_word = randint(0, count - 1)
@@ -29,9 +40,22 @@ def next():
 
 def anwser():
     if my_entry.get().capitalize() == words[random_word][1]:
-        answer_label.config(text=f"Correct {words[random_word][0]} is {words[random_word][1]}" )
+         answer_label.config(text=f"Correct! {words[random_word][0]} is {words[random_word][1]} ")
     else:
-        answer_label.config(text=f"Incorrect! {words[random_word][0]} is not {my_entry.get().capitalize()}")
+        answer_label.config(text=f"Incorrect! {words[random_word][0]} not { my_entry.get().capitalize()} ")
+#Keep track of hints
+hint_count = 0
+hinter = " "
+
+def hint():
+   global hint_count
+   global hinter
+
+   if hint_count < len(words[random_word][1]):
+        hinter = hinter + words[random_word][1][hint_count]
+        hint_label.config(text=hinter)
+        hint_count +=1
+
 
 jap_word = Label(root, text = "", font=("Sans-serif ", 20))
 jap_word.pack(pady = 50)
@@ -52,7 +76,7 @@ answer_button.grid(row = 0, column=0 , padx=20)
 next_button = Button(button_frame, text="Next", command = next)
 next_button.grid(row = 0, column=1)
 
-hint_button = Button(button_frame, text="Hint")
+hint_button = Button(button_frame, text="Hint", command =hint )
 hint_button.grid(row = 0, column=2 , padx=20)
 
 
